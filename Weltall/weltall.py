@@ -16,8 +16,7 @@ class Weltall(object):
 
     def InitGL(self):
         glEnable(GL_DEPTH_TEST)
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glEnable(GL_TEXTURE_2D)
 
         # Lighting
         self.lighting.enableLighting()
@@ -47,8 +46,6 @@ class Weltall(object):
     def DrawGLScene(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)   # Clear The Screen And The Depth Buffer
         glLoadIdentity()                    # Reset The Weltall
-        glEnable(GL_TEXTURE_2D)
-        glMatrixMode(GL_MODELVIEW)
 
         self.lighting.render()
 
@@ -103,6 +100,25 @@ class Weltall(object):
         if key == b's':
             self.model.speedEarth = 0
             self.model.speedMoon = 0
+
+        if key == b'f':
+            if self.model.fullscreen == False:
+                glutFullScreen()
+                self.model.fullscreen = True
+            else:
+                self.model.fullscreen = False
+                glutPositionWindow(0,0)
+                glutReshapeWindow(640, 480)
+
+        if key == b't':
+            if self.model.textures == True:
+                glEnable(GL_TEXTURE_2D)
+                self.model.textures = False
+            else:
+                glDisable(GL_TEXTURE_2D)
+                self.model.textures = True
+
+
 
         if key == b'\x1b':
             quit()

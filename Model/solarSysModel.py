@@ -21,5 +21,8 @@ class SolarSunModel:
         self.speedEarth = 5
         self.speedMoon = 10
 
+        self.fullscreen = False
+        self.textures = True
+
         self.t = Texturen()
         pass
