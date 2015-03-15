@@ -118,8 +118,6 @@ class Weltall(object):
                 glDisable(GL_TEXTURE_2D)
                 self.model.textures = True
 
-
-
         if key == b'\x1b':
             quit()
 
@@ -149,9 +147,6 @@ class Weltall(object):
         # set the function pointer and invoke a function to actually register the callback, otherwise it
         # would be very much like the C version of the code.
         glutDisplayFunc(self.DrawGLScene)
-
-        # Uncomment this line to get full screen.
-        # glutFullScreen()
 
         # When we are doing nothing, redraw the scene.
         glutIdleFunc(self.DrawGLScene)
