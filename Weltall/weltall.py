@@ -3,14 +3,17 @@ __author__ = 'floriandienesch'
 from Objekte import planet
 from Model.solarSysModel import *
 from Objekte.lighting import *
+from PyQt5 import QtCore, QtWidgets, QtWidgets, QtGui
+import sys, time
 
 # Die "view"-Klasse
 # Number of the glut window.
 window = 0
 
-class Weltall(object):
+class Weltall(QtWidgets.QDialog):
 
-    def __init__(self):
+    def __init__(self, parent=None):
+        super(Weltall, self).__init__(parent)
         self.model = SolarSunModel()
         self.lighting = Lighting()
 
@@ -73,7 +76,7 @@ class Weltall(object):
 
     def keyPressed(self, key, x, y):
         # If escape is pressed, kill everything.
-        if key == b'l': #  switch the object
+        if key == b'l':
             if self.model.lightStatus == "On":
                 self.lighting.enableLighting()
                 self.lighting.setLight(GL_LIGHT0, self.model.lightOff[0], self.model.lightOff[1],
@@ -123,8 +126,6 @@ class Weltall(object):
 
 
     def main(self):
-        glutInit(sys.argv)
-
         # Select type of Display mode:
         #  Double buffer
         #  RGBA color
@@ -165,5 +166,19 @@ class Weltall(object):
 
 
 if __name__ == '__main__':
+    app = QtWidgets.QApplication(glutInit(sys.argv))
+
+    # Create and display the splash screen
+    splash_pix = QtGui.QPixmap('out.png')
+    splash = QtWidgets.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
+    splash.setMask(splash_pix.mask())
+    splash.show()
+    app.processEvents()
+
+    # Simulate something that takes time
+    time.sleep(3)
+
     start = Weltall()
+    splash.finish(start)
+    app.quit()
     start.main()
