@@ -142,7 +142,7 @@ class Weltall(QtWidgets.QDialog):
         # Okay, like the C version we retain the window id to use when closing, but for those of you new
         # to Python (like myself), remember this assignment would make the variable local and not global
         # if it weren't for the global declaration at the start of main.
-        glutCreateWindow("Solarsystem")
+        glutCreateWindow("Solarsystem v0.5")
 
         # Register the drawing function with glut, BUT in Python land, at least using PyOpenGL, we need to
         # set the function pointer and invoke a function to actually register the callback, otherwise it
@@ -168,17 +168,15 @@ class Weltall(QtWidgets.QDialog):
 if __name__ == '__main__':
     app = QtWidgets.QApplication(glutInit(sys.argv))
 
-    # Create and display the splash screen
-    splash_pix = QtGui.QPixmap('out.png')
+    splash_pix = QtGui.QPixmap('../Splashscreen2.jpg')
     splash = QtWidgets.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
     splash.show()
     app.processEvents()
 
-    # Simulate something that takes time
     time.sleep(3)
 
     start = Weltall()
     splash.finish(start)
-    app.quit()
+    app.exit()
     start.main()
