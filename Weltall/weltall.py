@@ -16,6 +16,7 @@ class Weltall(QtWidgets.QDialog):
         super(Weltall, self).__init__(parent)
         self.model = SolarSunModel()
         self.lighting = Lighting()
+        self.lighting2 = Lighting()
 
     def InitGL(self):
         glEnable(GL_DEPTH_TEST)
@@ -50,13 +51,16 @@ class Weltall(QtWidgets.QDialog):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)   # Clear The Screen And The Depth Buffer
         glLoadIdentity()                    # Reset The Weltall
 
-        self.lighting.render()
-
         # solarSunControl.addPlanet(radius, rotation, quadratic, licht, x, y, z, longitude, latitude)
 
+        self.lighting.render()
+
+        self.lighting.disableLighting()
         self.quadratic = self.model.t.texturePlanet("sun")
+        planet.rotation(self.model.rot_sonne, 1, 0, 0)
         # Sonne
         planet.addPlanet(1, self.model.rot_sonne, self.quadratic, -4, 0, -12, 20, 20)
+        self.lighting.enableLighting()
 
         self.quadratic = self.model.t.texturePlanet("earth")
         # Rotation Erde
@@ -74,9 +78,9 @@ class Weltall(QtWidgets.QDialog):
         glutSwapBuffers()
 
 
-    def keyPressed(self, key, x, y):
+    def keyPressed(self, *args):
         # If escape is pressed, kill everything.
-        if key == b'l':
+        if args[0] == b'l':
             if self.model.lightStatus == "On":
                 self.lighting.enableLighting()
                 self.lighting.setLight(GL_LIGHT0, self.model.lightOff[0], self.model.lightOff[1],
@@ -92,19 +96,19 @@ class Weltall(QtWidgets.QDialog):
                 self.lighting.disableLighting()
                 self.model.lightStatus = "On"
 
-        if key == b'd':
+        if args[0] == b'd':
             self.model.speedEarth += 1
             self.model.speedMoon += 1
 
-        if key == b'a':
+        if args[0] == b'a':
             self.model.speedEarth -= 1
             self.model.speedMoon -= 1
 
-        if key == b's':
+        if args[0] == b's':
             self.model.speedEarth = 0
             self.model.speedMoon = 0
 
-        if key == b'f':
+        if args[0] == b'f':
             if self.model.fullscreen == False:
                 glutFullScreen()
                 self.model.fullscreen = True
@@ -113,7 +117,7 @@ class Weltall(QtWidgets.QDialog):
                 glutPositionWindow(0,0)
                 glutReshapeWindow(640, 480)
 
-        if key == b't':
+        if args[0] == b't':
             if self.model.textures == True:
                 glEnable(GL_TEXTURE_2D)
                 self.model.textures = False
@@ -121,7 +125,7 @@ class Weltall(QtWidgets.QDialog):
                 glDisable(GL_TEXTURE_2D)
                 self.model.textures = True
 
-        if key == b'\x1b':
+        if args[0] == b'\x1b':
             quit()
 
 
@@ -170,11 +174,10 @@ if __name__ == '__main__':
 
     splash_pix = QtGui.QPixmap('../Splashscreen2.jpg')
     splash = QtWidgets.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
-    splash.setMask(splash_pix.mask())
     splash.show()
     app.processEvents()
 
-    time.sleep(3)
+    # time.sleep(3)
 
     start = Weltall()
     splash.finish(start)

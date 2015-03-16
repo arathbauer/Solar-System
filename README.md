@@ -60,11 +60,9 @@ Viel Erfolg! " [1]
 - Pillow
 - Pyqt5
 
-
 ## TODO/ Known Bugs
 
 - Unter Python 3.4 ist die Performance deutlich schlechter, als unter Python 3.3
-- Das Licht ist nicht richtig positioniert
 - Die Umlaufbahn der Planeten ist noch zu verbessern
 
 ## Quellen
