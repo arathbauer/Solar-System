@@ -4,7 +4,7 @@ from Objekte import planet
 from Model.solarSysModel import *
 from Objekte.lighting import *
 from PyQt5 import QtCore, QtWidgets, QtWidgets, QtGui
-import sys, time
+import time
 
 # Die "view"-Klasse
 # Number of the glut window.

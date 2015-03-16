@@ -6,12 +6,13 @@
     |_____/ \___/|_|\__,_|_|  |___/\__, |___/\__\___|_| |_| |_|
                                    __/ |                      
                                   |___/       
-
+                                  
 # Table of contents
 
 1. Angabe
-2. Known Bugs
-3. TODO/ Quellen
+2. Verwendete Librarys
+3. Known Bugs
+4. TODO/ Quellen
 
 ## Angabe
 
@@ -52,6 +53,13 @@ Für das Einbetten einer Textur wird die Library Pillow benötigt! Die Community
 Tutorials:
 Pygame: https://www.youtube.com/watch?v=K5F-aGDIYaM
 Viel Erfolg! " [1]
+
+## Vewendete Librarys
+
+- Pyopengl
+- Pillow
+- Pyqt5
+
 
 ## TODO/ Known Bugs
 
