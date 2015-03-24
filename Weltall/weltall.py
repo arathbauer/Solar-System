@@ -33,23 +33,24 @@ class Weltall(QtWidgets.QDialog):
 
 
     # The function called when our window is resized (which shouldn't happen if you enable fullscreen, below)
-    def ReSizeGLScene(self, Width, Height):
-        if Height == 0:                  # Prevent A Divide By Zero If The Window Is Too Small
+    def ReSizeGLScene(self, width, height):
+        if height == 0:                  # Prevent A Divide By Zero If The Window Is Too Small
             Height = 1
 
-        self.model.width = Width
-        self.model.height = Height
+        glViewport(0, 0, width, height)      # Reset The Current Viewport And Perspective Transformation
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        glMatrixMode(GL_MODELVIEW)
+
+        self.model.width = width
+        self.model.height = height
 
 
     def DrawGLScene(self):
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        # ACHTUNG!!!
-        # 3. Parameter war auf 0.1!!!
-        # Calculate The Aspect Ratio Of The Window
-        gluPerspective(self.model.zoom, float(self.model.width)/ float(self.model.height), 1, 100.0)
+        gluPerspective(self.model.zoom, float(self.model.width)/ float(self.model.height), 1, 110.0)
         glMatrixMode(GL_MODELVIEW)
-
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)   # Clear The Screen And The Depth Buffer
         glLoadIdentity()                    # Reset The Weltall
@@ -75,7 +76,7 @@ class Weltall(QtWidgets.QDialog):
         # Rotation Mond
         planet.rotation(self.model.rot_mond, 0, self.model.speedMoon, 0)
         # Mond erstellen
-        planet.addPlanet(0.3, self.model.rot_mond, self.quadratic, 0, 0, -12, 40, 20)
+        planet.addPlanet(0.2, self.model.rot_mond, self.quadratic, 0, 0, -12, 40, 20)
 
         #  since this is double buffered, swap the buffers to display what just got drawn.
         glutSwapBuffers()
@@ -134,17 +135,16 @@ class Weltall(QtWidgets.QDialog):
             quit()
 
         if args[0] == b'x':
-            print(args[0])
-            self.model.zoom += 1
-            print(self.model.zoom)
+            if int(self.model.zoom) < 20:
+                self.model.zoom = 20
+            else:
+                self.model.zoom -= 1
 
         if args[0] == b'y':
-            print(args[0])
-            self.model.zoom -= 1
-            print(self.model.zoom)
-            gluLookAt( GLdouble ( 0 ) , GLdouble ( 0 ) , GLdouble ( 0 ) ,
-                       GLdouble ( 0 ) , GLdouble ( 0 ) , GLdouble ( 0 ) ,
-                       GLdouble ( 0 ) , GLdouble ( 0 ) , GLdouble ( 0 ) )
+            if int(self.model.zoom) > 100:
+                self.model.zoom = 100
+            else:
+                self.model.zoom += 1
 
 
     def main(self):
