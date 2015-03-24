@@ -62,8 +62,8 @@ Viel Erfolg! " [1]
 
 ## TODO/ Known Bugs
 
-- Unter Python 3.4 ist die Performance deutlich schlechter, als unter Python 3.3
 - Die Umlaufbahn der Planeten ist noch zu verbessern
+
 
 ## Quellen
 

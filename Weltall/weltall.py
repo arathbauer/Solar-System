@@ -37,17 +37,20 @@ class Weltall(QtWidgets.QDialog):
         if Height == 0:                  # Prevent A Divide By Zero If The Window Is Too Small
             Height = 1
 
-        glViewport(0, 0, Width, Height)      # Reset The Current Viewport And Perspective Transformation
+        self.model.width = Width
+        self.model.height = Height
+
+
+    def DrawGLScene(self):
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
         # ACHTUNG!!!
         # 3. Parameter war auf 0.1!!!
         # Calculate The Aspect Ratio Of The Window
-        gluPerspective(45.0, float(Width) / float(Height), 0.1, 100.0)
+        gluPerspective(self.model.zoom, float(self.model.width)/ float(self.model.height), 1, 100.0)
         glMatrixMode(GL_MODELVIEW)
 
 
-    def DrawGLScene(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)   # Clear The Screen And The Depth Buffer
         glLoadIdentity()                    # Reset The Weltall
 
@@ -57,26 +60,25 @@ class Weltall(QtWidgets.QDialog):
 
         self.lighting.disableLighting()
         self.quadratic = self.model.t.texturePlanet("sun")
-        planet.rotation(self.model.rot_sonne, 1, 0, 0)
+        planet.rotation(self.model.rot_sonne, self.model.speedSun, 0, 0)
         # Sonne
-        planet.addPlanet(1, self.model.rot_sonne, self.quadratic, -4, 0, -12, 20, 20)
+        planet.addPlanet(1, self.model.rot_sonne, self.quadratic, -4, 0, -12, 40, 20)
         self.lighting.enableLighting()
 
         self.quadratic = self.model.t.texturePlanet("earth")
         # Rotation Erde
         planet.rotation(self.model.rot_erde, 0, self.model.speedEarth, 0)
         # Erde erstellen
-        planet.addPlanet(1, self.model.rot_erde, self.quadratic, 0, 0, -15, 20, 20)
+        planet.addPlanet(1, self.model.rot_erde, self.quadratic, 0, 0, -15, 40, 20)
 
         self.quadratic = self.model.t.texturePlanet("moon")
         # Rotation Mond
         planet.rotation(self.model.rot_mond, 0, self.model.speedMoon, 0)
         # Mond erstellen
-        planet.addPlanet(0.3, self.model.rot_mond, self.quadratic, 0, 0, -12, 20, 20)
+        planet.addPlanet(0.3, self.model.rot_mond, self.quadratic, 0, 0, -12, 40, 20)
 
         #  since this is double buffered, swap the buffers to display what just got drawn.
         glutSwapBuffers()
-
 
     def keyPressed(self, *args):
         # If escape is pressed, kill everything.
@@ -99,14 +101,17 @@ class Weltall(QtWidgets.QDialog):
         if args[0] == b'd':
             self.model.speedEarth += 1
             self.model.speedMoon += 1
+            self.model.speedSun = 0.1
 
         if args[0] == b'a':
             self.model.speedEarth -= 1
             self.model.speedMoon -= 1
+            self.model.speedSun = 0.1
 
         if args[0] == b's':
             self.model.speedEarth = 0
             self.model.speedMoon = 0
+            self.model.speedSun = 0
 
         if args[0] == b'f':
             if self.model.fullscreen == False:
@@ -128,6 +133,19 @@ class Weltall(QtWidgets.QDialog):
         if args[0] == b'\x1b':
             quit()
 
+        if args[0] == b'x':
+            print(args[0])
+            self.model.zoom += 1
+            print(self.model.zoom)
+
+        if args[0] == b'y':
+            print(args[0])
+            self.model.zoom -= 1
+            print(self.model.zoom)
+            gluLookAt( GLdouble ( 0 ) , GLdouble ( 0 ) , GLdouble ( 0 ) ,
+                       GLdouble ( 0 ) , GLdouble ( 0 ) , GLdouble ( 0 ) ,
+                       GLdouble ( 0 ) , GLdouble ( 0 ) , GLdouble ( 0 ) )
+
 
     def main(self):
         # Select type of Display mode:
@@ -146,7 +164,7 @@ class Weltall(QtWidgets.QDialog):
         # Okay, like the C version we retain the window id to use when closing, but for those of you new
         # to Python (like myself), remember this assignment would make the variable local and not global
         # if it weren't for the global declaration at the start of main.
-        glutCreateWindow("Solarsystem v0.5")
+        glutCreateWindow("Solarsystem v0.6")
 
         # Register the drawing function with glut, BUT in Python land, at least using PyOpenGL, we need to
         # set the function pointer and invoke a function to actually register the callback, otherwise it
@@ -177,7 +195,7 @@ if __name__ == '__main__':
     splash.show()
     app.processEvents()
 
-    # time.sleep(3)
+    time.sleep(1)
 
     start = Weltall()
     splash.finish(start)
