@@ -18,6 +18,7 @@ class Weltall(QtWidgets.QDialog):
         self.lighting = Lighting()
         self.lighting2 = Lighting()
 
+
     def InitGL(self):
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_TEXTURE_2D)
@@ -28,6 +29,11 @@ class Weltall(QtWidgets.QDialog):
         self.lighting.setLight(GL_LIGHT0, self.model.lightOn[0], self.model.lightOn[1],
                                self.model.lightOn[2], self.model.lightOn[3])
         glShadeModel(GL_SMOOTH)
+
+        self.imageIDMoon = self.model.t.texturePlanet("./texture_moon.png")
+        self.imageIDEarth = self.model.t.texturePlanet("./texutre_earth.jpg")
+        self.imageIDSun = self.model.t.texturePlanet("./texture_sun.jpg")
+        self.imageIDJupiter = self.model.t.texturePlanet("./texture_jupiter.jpg")
 
         glEnable(GL_COLOR_MATERIAL)
         glClearColor(0.0, 0.0, 0.0, 0.0)
@@ -60,36 +66,36 @@ class Weltall(QtWidgets.QDialog):
 
         self.lighting.render()
 
+        glBindTexture(GL_TEXTURE_2D, self.imageIDSun[2])
         self.lighting.disableLighting()
-        self.quadratic = self.model.t.texturePlanet("sun")
         planet.rotation(self.model.rot_sonne, self.model.speedSun, 0, 0)
         # Sonne
-        planet.addPlanet(1, self.model.rot_sonne, self.quadratic, -4, 0, -12, 40, 20)
+        planet.addPlanet(1, self.model.rot_sonne, -4, 0, -12, 40, 20)
         self.lighting.enableLighting()
 
-        self.quadratic = self.model.t.texturePlanet("earth")
+        glBindTexture(GL_TEXTURE_2D, self.imageIDEarth[2])
         # Rotation Erde
         planet.rotation(self.model.rot_erde, 0, self.model.speedEarth, 0)
         # Erde erstellen
-        planet.addPlanet(1, self.model.rot_erde, self.quadratic, 0, 0, -15, 40, 20)
+        planet.addPlanet(0.8, self.model.rot_erde, 0, 0, -15, 20, 20)
 
-        self.quadratic = self.model.t.texturePlanet("moon")
+        glBindTexture(GL_TEXTURE_2D, self.imageIDMoon[2])
         # Rotation Mond
         planet.rotation(self.model.rot_mond, 0, self.model.speedMoon, 0)
         # Mond erstellen
-        planet.addPlanet(0.2, self.model.rot_mond, self.quadratic, 0, 0, -12, 40, 20)
+        planet.addPlanet(0.2, self.model.rot_mond, 0, 0, -12, 20, 20)
 
-        self.quadratic = self.model.t.texturePlanet("jupiter")
-        # Rotation Mond
+        glBindTexture(GL_TEXTURE_2D, self.imageIDJupiter[2])
+        # Rotation Jupiter
         planet.rotation(self.model.rot_jupiter, 0, self.model.speedJupiter, 0)
-        # Mond erstellen
-        planet.addPlanet(0.5, self.model.rot_jupiter, self.quadratic, 0, 0, -15, 20, 20)
+        # Jupiter erstellen
+        planet.addPlanet(1, self.model.rot_jupiter, 0, 0, -12, 20, 20)
 
         #  since this is double buffered, swap the buffers to display what just got drawn.
         glutSwapBuffers()
 
         # FPS
-        time.sleep( 1 / float( 60 ) )
+        time.sleep(1 / float(60))
 
     def mousePressed(self, button, state, x, y):
         """Handler for click on the screen"""
@@ -161,6 +167,7 @@ class Weltall(QtWidgets.QDialog):
                 self.model.zoom = 100
             else:
                 self.model.zoom += 1
+
 
     def main(self):
         # Select type of Display mode:

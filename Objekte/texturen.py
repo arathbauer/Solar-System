@@ -8,36 +8,46 @@ from PIL.Image import *
 
 class Texturen():
 
-    def texturePlanet(self, textur):
-        image = open("./out.png")
+    def texturePlanet(self, imageName):
+        """Load an image from a file using PIL,
+        produces 3 textures to demo filter types.
 
-        if textur == "sun":
-            # Laden der Sonnentextur
-            image = open("./texture_sun.jpg")
-        elif textur == "earth":
-            # Laden der Erdtextur
-            image = open("./texture_earth_2.jpg")
-        elif textur == "moon":
-            # Laden der Mondtextur
-            image = open("./texture_moon.png")
-        elif textur == "jupiter":
-            # Laden der Mondtextur
-            image = open("./texture_jupiter.jpg")
-
-        ix = image.size[0]
-        iy = image.size[1]
-        image = image.convert("RGBA").tostring("raw", "RGBA")
-
-        textures = glGenTextures(2)
-        glBindTexture(GL_TEXTURE_2D, int(textures[0]))  # 2d texture (x and y size)
-
-        glBindTexture(GL_TEXTURE_2D, int(textures[0]))
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST)
-        gluBuild2DMipmaps(GL_TEXTURE_2D, 3, ix, iy, GL_RGBA, GL_UNSIGNED_BYTE, image)
-
-        planet = gluNewQuadric()
-        gluQuadricNormals(planet, GLU_SMOOTH)  # Create Smooth Normals (NEW)
-        gluQuadricTexture(planet, GL_TRUE)  # Create Texture Coords (NEW)
-
-        return planet
+        Converts the paletted image to RGB format.
+        """
+        im = open(imageName)
+        try:
+            ## Note the conversion to RGB the crate bitmap is paletted!
+            im = im.convert( 'RGB')
+            ix, iy, image = im.size[0], im.size[1], im.tostring("raw", "RGBA", 0, -1)
+        except SystemError:
+            ix, iy, image = im.size[0], im.size[1], im.tostring("raw", "RGBX", 0, -1)
+        assert ix*iy*4 == len(image), """Image size != expected array size"""
+        IDs = []
+        # a Nearest-filtered texture...
+        ID = glGenTextures(1)
+        IDs.append( ID )
+        glBindTexture(GL_TEXTURE_2D, ID)
+        glPixelStorei(GL_UNPACK_ALIGNMENT,1)
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, ix, iy, 0, GL_RGBA, GL_UNSIGNED_BYTE, image)
+        # linear-filtered
+        ID = glGenTextures(1)
+        IDs.append( ID )
+        glBindTexture(GL_TEXTURE_2D, ID)
+        glPixelStorei(GL_UNPACK_ALIGNMENT,1)
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR)
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, ix, iy, 0, GL_RGBA, GL_UNSIGNED_BYTE, image)
+        # linear + mip-mapping
+        ID = glGenTextures(1)
+        IDs.append( ID )
+        glBindTexture(GL_TEXTURE_2D, ID)
+        glPixelStorei(GL_UNPACK_ALIGNMENT,1)
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST)
+        gluBuild2DMipmaps(
+            GL_TEXTURE_2D,
+            GL_RGBA, ix, iy, GL_RGBA, GL_UNSIGNED_BYTE, image
+        )
+        return IDs

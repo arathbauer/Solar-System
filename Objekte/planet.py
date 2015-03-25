@@ -7,7 +7,7 @@ from OpenGL.GLU import *
 # Number of the glut window.
 window = 0
 
-def addPlanet(radius, rot, quadratic, x, y, z, longitude, latitude):
+def addPlanet(radius, rot, x, y, z, longitude, latitude):
     glLoadIdentity()
     glTranslatef(x, y, z)
 
@@ -18,7 +18,10 @@ def addPlanet(radius, rot, quadratic, x, y, z, longitude, latitude):
     glTranslatef(4.0, 0.0, 0.0)
 
     # Planet erstellen
-    gluSphere(quadratic, radius, longitude, latitude)
+    quadric=gluNewQuadric()
+    gluQuadricNormals(quadric, GLU_SMOOTH)
+    gluQuadricTexture(quadric, GL_TRUE)
+    gluSphere(quadric, radius, longitude, latitude)
 
 
 def rotation(rot, x, y, z):
