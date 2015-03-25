@@ -27,6 +27,7 @@ class Weltall(QtWidgets.QDialog):
         self.lighting.addLight(GL_LIGHT0)
         self.lighting.setLight(GL_LIGHT0, self.model.lightOn[0], self.model.lightOn[1],
                                self.model.lightOn[2], self.model.lightOn[3])
+        glShadeModel(GL_SMOOTH)
 
         glEnable(GL_COLOR_MATERIAL)
         glClearColor(0.0, 0.0, 0.0, 0.0)
@@ -35,7 +36,7 @@ class Weltall(QtWidgets.QDialog):
     # The function called when our window is resized (which shouldn't happen if you enable fullscreen, below)
     def ReSizeGLScene(self, width, height):
         if height == 0:                  # Prevent A Divide By Zero If The Window Is Too Small
-            Height = 1
+            height = 1
 
         glViewport(0, 0, width, height)      # Reset The Current Viewport And Perspective Transformation
         glMatrixMode(GL_PROJECTION)
@@ -78,12 +79,21 @@ class Weltall(QtWidgets.QDialog):
         # Mond erstellen
         planet.addPlanet(0.2, self.model.rot_mond, self.quadratic, 0, 0, -12, 40, 20)
 
+        self.quadratic = self.model.t.texturePlanet("jupiter")
+        # Rotation Mond
+        planet.rotation(self.model.rot_jupiter, 0, self.model.speedJupiter, 0)
+        # Mond erstellen
+        planet.addPlanet(1, self.model.rot_jupiter, self.quadratic, 0, 0, -12, 20, 20)
+
         #  since this is double buffered, swap the buffers to display what just got drawn.
         glutSwapBuffers()
 
-    def keyPressed(self, *args):
-        # If escape is pressed, kill everything.
-        if args[0] == b'l':
+        # FPS
+        # time.sleep( 1 / float( 60 ) )
+
+    def mousePressed(self, button, state, x, y):
+        """Handler for click on the screen"""
+        if state == GLUT_DOWN and button == GLUT_LEFT_BUTTON:
             if self.model.lightStatus == "On":
                 self.lighting.enableLighting()
                 self.lighting.setLight(GL_LIGHT0, self.model.lightOff[0], self.model.lightOff[1],
@@ -99,6 +109,17 @@ class Weltall(QtWidgets.QDialog):
                 self.lighting.disableLighting()
                 self.model.lightStatus = "On"
 
+        if state == GLUT_DOWN and button == GLUT_RIGHT_BUTTON:
+            if self.model.textures == True:
+                glEnable(GL_TEXTURE_2D)
+                self.model.textures = False
+            else:
+                glDisable(GL_TEXTURE_2D)
+                self.model.textures = True
+
+
+    def keyPressed(self, *args):
+        # If escape is pressed, kill everything.
         if args[0] == b'd':
             self.model.speedEarth += 1
             self.model.speedMoon += 1
@@ -123,16 +144,8 @@ class Weltall(QtWidgets.QDialog):
                 glutPositionWindow(0,0)
                 glutReshapeWindow(640, 480)
 
-        if args[0] == b't':
-            if self.model.textures == True:
-                glEnable(GL_TEXTURE_2D)
-                self.model.textures = False
-            else:
-                glDisable(GL_TEXTURE_2D)
-                self.model.textures = True
-
         if args[0] == b'\x1b':
-            quit()
+            sys.exit()
 
         if args[0] == b'x':
             if int(self.model.zoom) < 20:
@@ -145,7 +158,6 @@ class Weltall(QtWidgets.QDialog):
                 self.model.zoom = 100
             else:
                 self.model.zoom += 1
-
 
     def main(self):
         # Select type of Display mode:
@@ -179,6 +191,9 @@ class Weltall(QtWidgets.QDialog):
 
         # Register the function called when the keyboard is pressed.
         glutKeyboardFunc(self.keyPressed)
+
+        # Register the function called when the mouse is clicked.
+        glutMouseFunc(self.mousePressed)
 
         # Initialize our window.
         self.InitGL()

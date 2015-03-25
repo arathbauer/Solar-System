@@ -16,10 +16,13 @@ class Texturen():
             image = open("./texture_sun.jpg")
         elif textur == "earth":
             # Laden der Erdtextur
-            image = open("./earth.jpg")
+            image = open("./texture_earth_2.jpg")
         elif textur == "moon":
             # Laden der Mondtextur
             image = open("./texture_moon.png")
+        elif textur == "jupiter":
+            # Laden der Mondtextur
+            image = open("./texture_jupiter.jpg")
 
         ix = image.size[0]
         iy = image.size[1]

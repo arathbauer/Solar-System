@@ -11,6 +11,8 @@ class SolarSunModel:
         self.rot_sonne = [0, 0, 0]
         # Mond
         self.rot_mond = [0, 0, 0]
+        # Jupiter
+        self.rot_jupiter = [0, 0, 0]
 
         self.lightStatus = "On"
         self.lightOff = [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]
@@ -21,6 +23,7 @@ class SolarSunModel:
         self.speedEarth = 5
         self.speedMoon = 5
         self.speedSun = 0.1
+        self.speedJupiter = 9
 
         self.fullscreen = False
         self.textures = False
