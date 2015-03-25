@@ -23,7 +23,7 @@ class SolarSunModel:
         self.speedEarth = 5
         self.speedMoon = 5
         self.speedSun = 0.1
-        self.speedJupiter = 9
+        self.speedJupiter = 2
 
         self.fullscreen = False
         self.textures = False

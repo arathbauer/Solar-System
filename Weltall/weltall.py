@@ -83,13 +83,13 @@ class Weltall(QtWidgets.QDialog):
         # Rotation Mond
         planet.rotation(self.model.rot_jupiter, 0, self.model.speedJupiter, 0)
         # Mond erstellen
-        planet.addPlanet(1, self.model.rot_jupiter, self.quadratic, 0, 0, -12, 20, 20)
+        planet.addPlanet(0.5, self.model.rot_jupiter, self.quadratic, 0, 0, -15, 20, 20)
 
         #  since this is double buffered, swap the buffers to display what just got drawn.
         glutSwapBuffers()
 
         # FPS
-        # time.sleep( 1 / float( 60 ) )
+        time.sleep( 1 / float( 60 ) )
 
     def mousePressed(self, button, state, x, y):
         """Handler for click on the screen"""
@@ -124,16 +124,19 @@ class Weltall(QtWidgets.QDialog):
             self.model.speedEarth += 1
             self.model.speedMoon += 1
             self.model.speedSun = 0.1
+            self.model.speedJupiter += 1
 
         if args[0] == b'a':
             self.model.speedEarth -= 1
             self.model.speedMoon -= 1
             self.model.speedSun = 0.1
+            self.model.speedJupiter -= 1
 
         if args[0] == b's':
             self.model.speedEarth = 0
             self.model.speedMoon = 0
             self.model.speedSun = 0
+            self.model.speedJupiter = 0
 
         if args[0] == b'f':
             if self.model.fullscreen == False:
@@ -176,7 +179,7 @@ class Weltall(QtWidgets.QDialog):
         # Okay, like the C version we retain the window id to use when closing, but for those of you new
         # to Python (like myself), remember this assignment would make the variable local and not global
         # if it weren't for the global declaration at the start of main.
-        glutCreateWindow("Solarsystem v0.6")
+        glutCreateWindow("Solarsystem v0.7")
 
         # Register the drawing function with glut, BUT in Python land, at least using PyOpenGL, we need to
         # set the function pointer and invoke a function to actually register the callback, otherwise it
