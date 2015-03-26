@@ -11,7 +11,9 @@ def addPlanet(radius, rot, x, y, z, longitude, latitude):
     glLoadIdentity()
     glTranslatef(x, y, z)
 
+    glRotatef(rot[0], 1.0, 0.0, 0.0)
     glRotatef(rot[1], 0.0, 1.0, 0.0)
+    glRotatef(rot[2], 0.0, 0.0, 1.0)
 
     glTranslatef(4.0, 0.0, 0.0)
 
