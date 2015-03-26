@@ -10,14 +10,13 @@ import time
 # Number of the glut window.
 window = 0
 
-class Weltall(QtWidgets.QDialog):
+class Weltall(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
         super(Weltall, self).__init__(parent)
         self.model = SolarSunModel()
         self.lighting = Lighting()
         self.lighting2 = Lighting()
-
 
     def InitGL(self):
         glEnable(GL_DEPTH_TEST)
@@ -30,10 +29,16 @@ class Weltall(QtWidgets.QDialog):
                                self.model.lightOn[2], self.model.lightOn[3])
         glShadeModel(GL_SMOOTH)
 
-        self.imageIDMoon = self.model.t.texturePlanet("./texture_moon.png")
-        self.imageIDEarth = self.model.t.texturePlanet("./texutre_earth.jpg")
-        self.imageIDSun = self.model.t.texturePlanet("./texture_sun.jpg")
-        self.imageIDJupiter = self.model.t.texturePlanet("./texture_jupiter.jpg")
+        if self.model.fileSet == False:
+            self.imageIDMoon = self.model.t.texturePlanet(self.model.file[0])
+            self.imageIDEarth = self.model.t.texturePlanet(self.model.file[1])
+            self.imageIDSun = self.model.t.texturePlanet(self.model.file[2])
+            self.imageIDJupiter = self.model.t.texturePlanet(self.model.file[3])
+        else:
+            self.imageIDMoon = self.model.t.texturePlanet(self.model.file[0][0])
+            self.imageIDEarth = self.model.t.texturePlanet(self.model.file[1][0])
+            self.imageIDSun = self.model.t.texturePlanet(self.model.file[2][0])
+            self.imageIDJupiter = self.model.t.texturePlanet(self.model.file[3][0])
 
         glEnable(GL_COLOR_MATERIAL)
         glClearColor(0.0, 0.0, 0.0, 0.0)
@@ -91,11 +96,11 @@ class Weltall(QtWidgets.QDialog):
         # Jupiter erstellen
         planet.addPlanet(1, self.model.rot_jupiter, 0, 0, -12, 20, 20)
 
-        #  since this is double buffered, swap the buffers to display what just got drawn.
-        glutSwapBuffers()
-
         # FPS
         time.sleep(1 / float(60))
+
+        #  since this is double buffered, swap the buffers to display what just got drawn.
+        glutSwapBuffers()
 
     def mousePressed(self, button, state, x, y):
         """Handler for click on the screen"""
@@ -168,6 +173,14 @@ class Weltall(QtWidgets.QDialog):
             else:
                 self.model.zoom += 1
 
+        if args[0] == b't':
+            self.model.fileSet = True
+            self.model.file[0] = QtWidgets.QFileDialog.getOpenFileName(self, 'Load texture Moon', '/home')
+            self.model.file[1] = QtWidgets.QFileDialog.getOpenFileName(self, 'Load texture Earth', '/home')
+            self.model.file[2] = QtWidgets.QFileDialog.getOpenFileName(self, 'Load texture Sun', '/home')
+            self.model.file[3] = QtWidgets.QFileDialog.getOpenFileName(self, 'Load texture Jupiter', '/home')
+            self.InitGL()
+
 
     def main(self):
         # Select type of Display mode:
@@ -186,7 +199,7 @@ class Weltall(QtWidgets.QDialog):
         # Okay, like the C version we retain the window id to use when closing, but for those of you new
         # to Python (like myself), remember this assignment would make the variable local and not global
         # if it weren't for the global declaration at the start of main.
-        glutCreateWindow("Solarsystem v0.7")
+        glutCreateWindow("Solarsystem v0.8")
 
         # Register the drawing function with glut, BUT in Python land, at least using PyOpenGL, we need to
         # set the function pointer and invoke a function to actually register the callback, otherwise it

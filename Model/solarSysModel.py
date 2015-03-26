@@ -20,9 +20,9 @@ class SolarSunModel:
 
         self.quadratic = None
 
-        self.speedEarth = 5
-        self.speedMoon = 5
-        self.speedSun = 0.1
+        self.speedEarth = 3
+        self.speedMoon = 3
+        self.speedSun = 0.2
         self.speedJupiter = 1
 
         self.fullscreen = False
@@ -32,6 +32,13 @@ class SolarSunModel:
 
         self.width = 640
         self.height = 480
+
+        self.file = [0,1,2,3,4,5,6,7,8,9,10]
+        self.file[0] = "./texture_moon.png"
+        self.file[1] = "./texutre_earth.jpg"
+        self.file[2] = "./texture_sun.jpg"
+        self.file[3] = "./texture_jupiter.jpg"
+        self.fileSet = False
 
         self.t = Texturen()
         pass
