@@ -7,16 +7,21 @@ import sys
 from PIL.Image import *
 
 class Texturen():
+    """
+    Class Texturen
+    This class loads a texture
+    """
 
     def texturePlanet(self, imageName):
-        """Load an image from a file using PIL,
-        produces 3 textures to demo filter types.
-
+        """
+        Method texturePlanet
+        Load an image from a file using PIL, produces 3 textures of filter types.
         Converts the paletted image to RGB format.
         """
+        # load the image
         im = open(imageName)
         try:
-            ## Note the conversion to RGB the crate bitmap is paletted!
+            # Note the conversion to RGB the crate bitmap is paletted!
             im = im.convert( 'RGB')
             ix, iy, image = im.size[0], im.size[1], im.tostring("raw", "RGBA", 0, -1)
         except SystemError:

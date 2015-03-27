@@ -11,12 +11,11 @@ class Weltall(QtWidgets.QWidget):
     This class is our universe.
     We can display here our planets, stars or our moon
     """
+
     def __init__(self, parent=None):
         """
         Constructor
         Initialize the variables
-        :param parent:
-        :return:
         """
         QtWidgets.QWidget.__init__(self)
         self.model = SolarSunModel()
@@ -57,6 +56,7 @@ class Weltall(QtWidgets.QWidget):
             self.imageIDSun = self.model.t.texturePlanet(self.model.file[2][0])
             self.imageIDJupiter = self.model.t.texturePlanet(self.model.file[3][0])
 
+        # open the help window
         self.help()
 
         # set color of the back of the planet not to black
@@ -64,9 +64,9 @@ class Weltall(QtWidgets.QWidget):
         # set the Backgroundcolor
         glClearColor(0.0, 0.0, 0.0, 0.0)
 
-    def ReSizeGLScene(self, width, height):
+    def reSizeGLScene(self, width, height):
         """
-        Function reSizeGLScene
+        Method reSizeGLScene
         This function is called automatically by pyopengl when the window is resized
         :param width: width of the window
         :param height: height of the window
@@ -83,9 +83,9 @@ class Weltall(QtWidgets.QWidget):
         self.model.height = height
 
 
-    def DrawGLScene(self):
+    def drawGLScene(self):
         """
-        Function drawGLScene
+        Method drawGLScene
         This Function is called automatically by opengl
         """
         glMatrixMode(GL_PROJECTION)
@@ -173,7 +173,11 @@ class Weltall(QtWidgets.QWidget):
                 self.model.textures = True
 
     def help(self):
-        self.setGeometry(300, 300, 250, 150)
+        """
+        Method help
+        This displays an extern window with the description of the controls
+        """
+        self.setGeometry(300, 300, 300, 290)
         self.setWindowTitle('Solarsystem Help')
         self.setToolTip('This is the <i>Help</i> of the <i>controls</i> ')
         self.setMaximumSize(300, 290)
@@ -199,7 +203,7 @@ class Weltall(QtWidgets.QWidget):
 
     def keyPressed(self, *args):
         """
-        Function keyPressed
+        Method keyPressed
         This function is called when a button on the keyboard is pressed
         :param args: which button is pressed
         """
@@ -263,9 +267,8 @@ class Weltall(QtWidgets.QWidget):
 
     def main(self):
         """
-        Function main
+        Method main
         This function initializes and start pyopengl
-        :return:
         """
         # Select type of Display mode:
         #  Double buffer
@@ -283,18 +286,18 @@ class Weltall(QtWidgets.QWidget):
         # Okay, like the C version we retain the window id to use when closing, but for those of you new
         # to Python (like myself), remember this assignment would make the variable local and not global
         # if it weren't for the global declaration at the start of main.
-        glutCreateWindow("Solarsystem v0.8")
+        glutCreateWindow("Solarsystem v0.9")
 
         # Register the drawing function with glut, BUT in Python land, at least using PyOpenGL, we need to
         # set the function pointer and invoke a function to actually register the callback, otherwise it
         # would be very much like the C version of the code.
-        glutDisplayFunc(self.DrawGLScene)
+        glutDisplayFunc(self.drawGLScene)
 
         # When we are doing nothing, redraw the scene.
-        glutIdleFunc(self.DrawGLScene)
+        glutIdleFunc(self.drawGLScene)
 
         # Register the function called when our window is resized.
-        glutReshapeFunc(self.ReSizeGLScene)
+        glutReshapeFunc(self.reSizeGLScene)
 
         # Register the function called when the keyboard is pressed.
         glutKeyboardFunc(self.keyPressed)
