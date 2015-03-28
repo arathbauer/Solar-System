@@ -1,3 +1,4 @@
+# pylint: disable=wildcard-import, unused-wildcard-import, invalid-name, import-error,  missing-docstring, too-few-public-methods, redefined-builtin
 __author__ = 'floriandienesch'
 
 from OpenGL.GL import *
@@ -6,7 +7,7 @@ from OpenGL.GLU import *
 import sys
 from PIL.Image import *
 
-class Texturen():
+class Texturen(object):
     """
     Class Texturen
     This class loads a texture
@@ -30,29 +31,26 @@ class Texturen():
         IDs = []
         # a Nearest-filtered texture...
         ID = glGenTextures(1)
-        IDs.append( ID )
+        IDs.append(ID)
         glBindTexture(GL_TEXTURE_2D, ID)
-        glPixelStorei(GL_UNPACK_ALIGNMENT,1)
-        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
         glTexImage2D(GL_TEXTURE_2D, 0, 3, ix, iy, 0, GL_RGBA, GL_UNSIGNED_BYTE, image)
         # linear-filtered
         ID = glGenTextures(1)
-        IDs.append( ID )
+        IDs.append(ID)
         glBindTexture(GL_TEXTURE_2D, ID)
-        glPixelStorei(GL_UNPACK_ALIGNMENT,1)
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR)
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
         glTexImage2D(GL_TEXTURE_2D, 0, 3, ix, iy, 0, GL_RGBA, GL_UNSIGNED_BYTE, image)
         # linear + mip-mapping
         ID = glGenTextures(1)
-        IDs.append( ID )
+        IDs.append(ID)
         glBindTexture(GL_TEXTURE_2D, ID)
-        glPixelStorei(GL_UNPACK_ALIGNMENT,1)
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST)
-        gluBuild2DMipmaps(
-            GL_TEXTURE_2D,
-            GL_RGBA, ix, iy, GL_RGBA, GL_UNSIGNED_BYTE, image
-        )
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST)
+        gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, ix, iy, GL_RGBA, GL_UNSIGNED_BYTE, image)
         return IDs

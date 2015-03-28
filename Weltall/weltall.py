@@ -1,9 +1,10 @@
+# pylint: disable=import-error, wildcard-import, invalid-name, undefined-variable, no-member, attribute-defined-outside-init
 __author__ = 'floriandienesch'
 
 from Objekte import planet, fixstern, mond
 from Model.solarSysModel import *
-from Objekte.lighting import *
-from PyQt5 import QtCore, QtWidgets, QtWidgets, QtGui
+from Objekte.lighting import Lighting
+from PyQt5 import QtCore, QtWidgets, QtGui
 import time
 
 class Weltall(QtWidgets.QWidget):
@@ -93,7 +94,7 @@ class Weltall(QtWidgets.QWidget):
         gluPerspective(self.model.zoom, float(self.model.width)/ float(self.model.height), 1, 110.0)
 
         if self.model.perspective == 1:
-            gluLookAt(0,8,4,0,6,0,0,1,0)
+            gluLookAt(0, 8, 4, 0, 6, 0, 0, 1, 0)
 
         glMatrixMode(GL_MODELVIEW)
         # clear The Screen And The Depth Buffer
@@ -156,7 +157,7 @@ class Weltall(QtWidgets.QWidget):
             # if the light is already off, turn it off2
             elif self.model.lightStatus == "Off":
                 self.lighting.setLight(GL_LIGHT0, self.model.lightOn[0], self.model.lightOn[1],
-                    self.model.lightOn[2], self.model.lightOn[3])
+                                       self.model.lightOn[2], self.model.lightOn[3])
                 self.model.lightStatus = "Off2"
 
             # if the light is already off, turn it on
@@ -184,7 +185,7 @@ class Weltall(QtWidgets.QWidget):
         self.setWindowTitle('Solarsystem Help')
         self.setToolTip('This is the <i>Help</i> of the <i>controls</i> ')
         self.setMaximumSize(300, 330)
-        self.move(650,0)
+        self.move(650, 0)
         self.edit = QtWidgets.QTextEdit()
         self.edit.setEnabled(False)
         self.edit.append('<h1>Controls</h1>'
@@ -216,16 +217,16 @@ class Weltall(QtWidgets.QWidget):
         """
         # speed up the planets
         if args[0] == b'd':
-            self.model.speedEarth += 1
-            self.model.speedMoon += 1
+            self.model.speedEarth += 0.2
+            self.model.speedMoon += 0.2
             self.model.speedSun = 0.1
-            self.model.speedJupiter += 1
+            self.model.speedJupiter += 0.2
         # speed down the planets
         if args[0] == b'a':
-            self.model.speedEarth -= 1
-            self.model.speedMoon -= 1
+            self.model.speedEarth -= 0.2
+            self.model.speedMoon -= 0.2
             self.model.speedSun = 0.1
-            self.model.speedJupiter -= 1
+            self.model.speedJupiter -= 0.2
         # stop the planets
         if args[0] == b's':
             self.model.speedEarth = 0
@@ -239,7 +240,7 @@ class Weltall(QtWidgets.QWidget):
                 self.model.fullscreen = True
             else:
                 self.model.fullscreen = False
-                glutPositionWindow(0,0)
+                glutPositionWindow(0, 0)
                 glutReshapeWindow(640, 480)
         # If escape is pressed, kill everything.
         if args[0] == b'\x1b':
@@ -260,14 +261,18 @@ class Weltall(QtWidgets.QWidget):
         if args[0] == b't':
             self.model.fileSet = True
             try:
-                self.model.file[0] = QtWidgets.QFileDialog.getOpenFileName(self, 'Load texture Moon', '/home')
-                self.model.file[1] = QtWidgets.QFileDialog.getOpenFileName(self, 'Load texture Earth', '/home')
-                self.model.file[2] = QtWidgets.QFileDialog.getOpenFileName(self, 'Load texture Sun', '/home')
-                self.model.file[3] = QtWidgets.QFileDialog.getOpenFileName(self, 'Load texture Jupiter', '/home')
-            except:
-                print("dd")
-            if self.model.file[0] or self.model.file[1] or self.model.file[2] or self.model.file[3] == '':
-                print("empty")
+                self.model.file[0] = QtWidgets.QFileDialog.\
+                    getOpenFileName(self, 'Load texture Moon', '/home')
+                self.model.file[1] = QtWidgets.QFileDialog\
+                    .getOpenFileName(self, 'Load texture Earth', '/home')
+                self.model.file[2] = QtWidgets.QFileDialog.\
+                    getOpenFileName(self, 'Load texture Sun', '/home')
+                self.model.file[3] = QtWidgets.QFileDialog.\
+                    getOpenFileName(self, 'Load texture Jupiter', '/home')
+            except Exception:
+                if self.model.file[0] or self.model.file[1] \
+                        or self.model.file[2] or self.model.file[3] == '':
+                    print("empty")
             self.InitGL()
         if args[0] == b'h':
             self.help()
@@ -296,13 +301,18 @@ class Weltall(QtWidgets.QWidget):
         # the window starts at the upper left corner of the screen
         glutInitWindowPosition(0, 0)
 
-        # Okay, like the C version we retain the window id to use when closing, but for those of you new
-        # to Python (like myself), remember this assignment would make the variable local and not global
-        # if it weren't for the global declaration at the start of main.
+        # Okay, like the C version we retain the window id to
+        # use when closing, but for those of you new
+        # to Python (like myself), remember this assignment
+        # would make the variable local and not global
+        # if it weren't for the global declaration at the
+        # start of main.
         glutCreateWindow("Solarsystem v0.9")
 
-        # Register the drawing function with glut, BUT in Python land, at least using PyOpenGL, we need to
-        # set the function pointer and invoke a function to actually register the callback, otherwise it
+        # Register the drawing function with glut, BUT in Python
+        # land, at least using PyOpenGL, we need to
+        # set the function pointer and invoke a function to
+        # actually register the callback, otherwise it
         # would be very much like the C version of the code.
         glutDisplayFunc(self.drawGLScene)
 
