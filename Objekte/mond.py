@@ -1,22 +1,16 @@
 __author__ = 'floriandienesch'
-a__author__ = 'floriandienesch'
 
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-# Number of the glut window.
-window = 0
-
 def addMond(radius, rot, x, y, z, longitude, latitude):
     glLoadIdentity()
     glTranslatef(x, y, z)
 
-    # glRotatef(rot[0], 1.0, 0.0, 0.0)
     glRotatef(rot[1], 0.0, 1.0, 0.0)
-    # glRotatef(rot[2], 0.0, 0.0, 1.0)
 
-    glTranslatef(5.0, 0.0, 5.0)
+    glTranslatef(3.0, 0.0, 3.0)
 
     # Planet erstellen
     quadric = gluNewQuadric()
@@ -25,8 +19,6 @@ def addMond(radius, rot, x, y, z, longitude, latitude):
 
 
 def rotation(rot, x, y, z):
-    # rot[0] = rot[0] + x
     rot[1] = rot[1] + y
-    # rot[2] = rot[2] + z
 
     return rot

@@ -12,7 +12,7 @@ class Texturen():
     This class loads a texture
     """
 
-    def texturePlanet(self, imageName):
+    def textureOrbit(self, imageName):
         """
         Method texturePlanet
         Load an image from a file using PIL, produces 3 textures of filter types.
@@ -22,7 +22,7 @@ class Texturen():
         im = open(imageName)
         try:
             # Note the conversion to RGB the crate bitmap is paletted!
-            im = im.convert( 'RGB')
+            im = im.convert('RGB')
             ix, iy, image = im.size[0], im.size[1], im.tostring("raw", "RGBA", 0, -1)
         except SystemError:
             ix, iy, image = im.size[0], im.size[1], im.tostring("raw", "RGBX", 0, -1)

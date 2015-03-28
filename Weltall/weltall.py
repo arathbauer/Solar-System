@@ -43,18 +43,18 @@ class Weltall(QtWidgets.QWidget):
         # set the textures when starting the program
         if self.model.fileSet == False:
             try:
-                self.imageIDMoon = self.model.t.texturePlanet(self.model.file[0])
-                self.imageIDEarth = self.model.t.texturePlanet(self.model.file[1])
-                self.imageIDSun = self.model.t.texturePlanet(self.model.file[2])
-                self.imageIDJupiter = self.model.t.texturePlanet(self.model.file[3])
+                self.imageIDMoon = self.model.t.textureOrbit(self.model.file[0])
+                self.imageIDEarth = self.model.t.textureOrbit(self.model.file[1])
+                self.imageIDSun = self.model.t.textureOrbit(self.model.file[2])
+                self.imageIDJupiter = self.model.t.textureOrbit(self.model.file[3])
             except:
                 print("Can't find the textures!")
         # load the textures which are assigned by the user
         else:
-            self.imageIDMoon = self.model.t.texturePlanet(self.model.file[0][0])
-            self.imageIDEarth = self.model.t.texturePlanet(self.model.file[1][0])
-            self.imageIDSun = self.model.t.texturePlanet(self.model.file[2][0])
-            self.imageIDJupiter = self.model.t.texturePlanet(self.model.file[3][0])
+            self.imageIDMoon = self.model.t.textureOrbit(self.model.file[0][0])
+            self.imageIDEarth = self.model.t.textureOrbit(self.model.file[1][0])
+            self.imageIDSun = self.model.t.textureOrbit(self.model.file[2][0])
+            self.imageIDJupiter = self.model.t.textureOrbit(self.model.file[3][0])
 
         # open the help window
         self.help()
@@ -93,7 +93,7 @@ class Weltall(QtWidgets.QWidget):
         gluPerspective(self.model.zoom, float(self.model.width)/ float(self.model.height), 1, 110.0)
 
         if self.model.perspective == 1:
-            gluLookAt(0,8,4, 0,6,0, 0,1,0)
+            gluLookAt(0,8,4,0,6,0,0,1,0)
 
         glMatrixMode(GL_MODELVIEW)
         # clear The Screen And The Depth Buffer
@@ -118,7 +118,7 @@ class Weltall(QtWidgets.QWidget):
         # rotate the earth
         planet.rotation(self.model.rot_erde, 0, self.model.speedEarth, 0)
         # add the earth to our solar system
-        planet.addPlanet(0.8, self.model.rot_erde, 0, 0, -15, 20, 20)
+        planet.addPlanet(0.8, self.model.rot_erde, 0, 0, -15, 3.0, 3.0, 20, 20)
 
         glBindTexture(GL_TEXTURE_2D, self.imageIDMoon[2])
         mond.rotation(self.model.rot_mond, 0, self.model.speedMoon, 0)
@@ -126,7 +126,7 @@ class Weltall(QtWidgets.QWidget):
 
         glBindTexture(GL_TEXTURE_2D, self.imageIDJupiter[2])
         planet.rotation(self.model.rot_jupiter, 0, self.model.speedJupiter, 0)
-        planet.addPlanet(1, self.model.rot_jupiter, 0, 0, -12, 20, 20)
+        planet.addPlanet(1, self.model.rot_jupiter, 0, 0, -12, 6.0, 6.0, 20, 20)
 
         # limit our FPS to 60 FPS
         time.sleep(1 / float(60))
@@ -180,20 +180,24 @@ class Weltall(QtWidgets.QWidget):
         Method help
         This displays an extern window with the description of the controls
         """
-        self.setGeometry(300, 300, 300, 290)
+        self.setGeometry(300, 300, 300, 330)
         self.setWindowTitle('Solarsystem Help')
         self.setToolTip('This is the <i>Help</i> of the <i>controls</i> ')
-        self.setMaximumSize(300, 290)
+        self.setMaximumSize(300, 330)
         self.move(650,0)
         self.edit = QtWidgets.QTextEdit()
         self.edit.setEnabled(False)
-        self.edit.append('<h1>Controls</h1></br>Turn light on/ off: <b>Left mouse click</b>'
+        self.edit.append('<h1>Controls</h1>'
+                         '<b><i>Mouse controls:</i></b>'
+                         '<br>Turn light on/ off: <b>Left mouse click</b>'
                          '<br>Turn texture on/ off: <b>Right mouse click</b>'
                          '<br>'
+                         '<br><b><i>Keyboard controls:</i></b>'
                          '<br>Increase speed of Planets: <b>d</b>'
                          '<br>Decrease speed of Planets: <b>a</b>'
                          '<br>Stop animation: <b>s</b>'
                          '<br>Load your own textures: <b>t</b>'
+                         '<br>Switch view: <b>m</b>'
                          '<br>Zoom in: <b>x</b>'
                          '<br>Zoom out: <b>y</b>'
                          '<br>Switch to fullscreen mode: <b>f</b>'
