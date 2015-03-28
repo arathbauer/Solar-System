@@ -35,6 +35,9 @@ class Lighting(object):
         newLight = Light(id)
         self.lights[id] = newLight
 
+    def getLight(self):
+        return str(self.lights)
+
     def setLight(self, id, position, diffuse, specular, ambient):
         """
         Method setLight

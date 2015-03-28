@@ -5,6 +5,9 @@ from Objekte import planet, fixstern, mond
 from Model.solarSysModel import *
 from Objekte.lighting import Lighting
 from PyQt5 import QtCore, QtWidgets, QtGui
+from Objekte.planet import Planet
+from Objekte.mond import Mond
+from Objekte.fixstern import Fixstern
 import time
 
 class Weltall(QtWidgets.QWidget):
@@ -21,6 +24,9 @@ class Weltall(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self)
         self.model = SolarSunModel()
         self.lighting = Lighting()
+        self.planet = Planet()
+        self.mond = Mond()
+        self.fixstern = Fixstern()
 
     def InitGL(self):
         """
@@ -37,6 +43,7 @@ class Weltall(QtWidgets.QWidget):
         self.lighting.enableLighting()
         # add a new light
         self.lighting.addLight(GL_LIGHT0)
+
         # set the position of the light to the sun
         self.lighting.setLight(GL_LIGHT0, self.model.lightOn[0], self.model.lightOn[1],
                                self.model.lightOn[2], self.model.lightOn[3])
@@ -57,6 +64,7 @@ class Weltall(QtWidgets.QWidget):
             self.imageIDSun = self.model.t.textureOrbit(self.model.file[2][0])
             self.imageIDJupiter = self.model.t.textureOrbit(self.model.file[3][0])
 
+
         # open the help window
         self.help()
 
@@ -73,15 +81,18 @@ class Weltall(QtWidgets.QWidget):
         :param height: height of the window
         """
         # prevent A Divide By Zero If The Window Is Too Small
-        if height == 0:
-            height = 1
+        try:
+            if height == 0:
+                height = 1
 
-        # reset The Current Viewport And Perspective Transformation
-        glViewport(0, 0, width, height)
+            # reset The Current Viewport And Perspective Transformation
+            glViewport(0, 0, width, height)
 
-        # save the values of the current width and height
-        self.model.width = width
-        self.model.height = height
+            # save the values of the current width and height
+            self.model.width = width
+            self.model.height = height
+        except Exception:
+            print("Please enter an integer")
 
 
     def drawGLScene(self):
@@ -109,25 +120,25 @@ class Weltall(QtWidgets.QWidget):
         glBindTexture(GL_TEXTURE_2D, self.imageIDSun[2])
         self.lighting.disableLighting()
         # rotate the sun
-        fixstern.rotation(self.model.rot_sonne, self.model.speedSun, 0, 0)
+        self.fixstern.rotation(self.model.rot_sonne, self.model.speedSun, 0, 0)
         # add the sun to our solar system
-        fixstern.addFixstern(1, self.model.rot_sonne, -4, 0, -12, 40, 20)
+        self.fixstern.addFixstern(1, self.model.rot_sonne, -4, 0, -12, 40, 20)
         self.lighting.enableLighting()
 
         # bind the earth texture in our buffer
         glBindTexture(GL_TEXTURE_2D, self.imageIDEarth[2])
         # rotate the earth
-        planet.rotation(self.model.rot_erde, 0, self.model.speedEarth, 0)
+        self.planet.rotation(self.model.rot_erde, 0, self.model.speedEarth, 0)
         # add the earth to our solar system
-        planet.addPlanet(0.8, self.model.rot_erde, 0, 0, -15, 3.0, 3.0, 20, 20)
+        self.planet.addPlanet(0.8, self.model.rot_erde, 0, 0, -15, 3.0, 3.0, 20, 20)
 
         glBindTexture(GL_TEXTURE_2D, self.imageIDMoon[2])
-        mond.rotation(self.model.rot_mond, 0, self.model.speedMoon, 0)
-        mond.addMond(0.2, self.model.rot_mond, 0, 0, -12, 20, 20)
+        self.mond.rotation(self.model.rot_mond, 0, self.model.speedMoon, 0)
+        self.mond.addMond(0.2, self.model.rot_mond, 0, 0, -12, 20, 20)
 
         glBindTexture(GL_TEXTURE_2D, self.imageIDJupiter[2])
-        planet.rotation(self.model.rot_jupiter, 0, self.model.speedJupiter, 0)
-        planet.addPlanet(1, self.model.rot_jupiter, 0, 0, -12, 6.0, 6.0, 20, 20)
+        self.planet.rotation(self.model.rot_jupiter, 0, self.model.speedJupiter, 0)
+        self.planet.addPlanet(1, self.model.rot_jupiter, 0, 0, -12, 6.0, 6.0, 20, 20)
 
         # limit our FPS to 60 FPS
         time.sleep(1 / float(60))
