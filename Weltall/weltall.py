@@ -1,6 +1,6 @@
 __author__ = 'floriandienesch'
 
-from Objekte import planet
+from Objekte import planet, fixstern, mond
 from Model.solarSysModel import *
 from Objekte.lighting import *
 from PyQt5 import QtCore, QtWidgets, QtWidgets, QtGui
@@ -91,8 +91,11 @@ class Weltall(QtWidgets.QWidget):
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
         gluPerspective(self.model.zoom, float(self.model.width)/ float(self.model.height), 1, 110.0)
-        glMatrixMode(GL_MODELVIEW)
 
+        if self.model.perspective == 1:
+            gluLookAt(0,8,4, 0,6,0, 0,1,0)
+
+        glMatrixMode(GL_MODELVIEW)
         # clear The Screen And The Depth Buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         # reset The Weltall
@@ -105,9 +108,9 @@ class Weltall(QtWidgets.QWidget):
         glBindTexture(GL_TEXTURE_2D, self.imageIDSun[2])
         self.lighting.disableLighting()
         # rotate the sun
-        planet.rotation(self.model.rot_sonne, self.model.speedSun, 0, 0)
+        fixstern.rotation(self.model.rot_sonne, self.model.speedSun, 0, 0)
         # add the sun to our solar system
-        planet.addPlanet(1, self.model.rot_sonne, -4, 0, -12, 40, 20)
+        fixstern.addFixstern(1, self.model.rot_sonne, -4, 0, -12, 40, 20)
         self.lighting.enableLighting()
 
         # bind the earth texture in our buffer
@@ -118,8 +121,8 @@ class Weltall(QtWidgets.QWidget):
         planet.addPlanet(0.8, self.model.rot_erde, 0, 0, -15, 20, 20)
 
         glBindTexture(GL_TEXTURE_2D, self.imageIDMoon[2])
-        planet.rotation(self.model.rot_mond, 0, self.model.speedMoon, 0)
-        planet.addPlanet(0.2, self.model.rot_mond, 0, 0, -12, 20, 20)
+        mond.rotation(self.model.rot_mond, 0, self.model.speedMoon, 0)
+        mond.addMond(0.2, self.model.rot_mond, 0, 0, -12, 20, 20)
 
         glBindTexture(GL_TEXTURE_2D, self.imageIDJupiter[2])
         planet.rotation(self.model.rot_jupiter, 0, self.model.speedJupiter, 0)
@@ -265,6 +268,12 @@ class Weltall(QtWidgets.QWidget):
         if args[0] == b'h':
             self.help()
 
+        if args[0] == b'm':
+            if self.model.perspective == 0:
+                self.model.perspective = 1
+            else:
+                self.model.perspective = 0
+
     def main(self):
         """
         Method main
@@ -315,8 +324,11 @@ class Weltall(QtWidgets.QWidget):
 if __name__ == '__main__':
     app = QtWidgets.QApplication(glutInit(sys.argv))
 
+    # load splashscreen
     splash_pix = QtGui.QPixmap('../Splashscreen2.jpg')
+    # generate the splashscreen with the image
     splash = QtWidgets.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
+    # show the splashscreen
     splash.show()
     app.processEvents()
 

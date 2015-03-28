@@ -47,5 +47,8 @@ class SolarSunModel:
         self.file[3] = "./texture_jupiter.jpg"
         self.fileSet = False
 
+        # camera perspective
+        self.perspective = 0
+
         self.t = Texturen()
         pass

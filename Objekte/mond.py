@@ -1,4 +1,5 @@
 __author__ = 'floriandienesch'
+a__author__ = 'floriandienesch'
 
 from OpenGL.GL import *
 from OpenGL.GLUT import *
@@ -7,7 +8,7 @@ from OpenGL.GLU import *
 # Number of the glut window.
 window = 0
 
-def addPlanet(radius, rot, x, y, z, longitude, latitude):
+def addMond(radius, rot, x, y, z, longitude, latitude):
     glLoadIdentity()
     glTranslatef(x, y, z)
 
