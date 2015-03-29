@@ -138,7 +138,7 @@ class Weltall(QtWidgets.QWidget):
 
         glBindTexture(GL_TEXTURE_2D, self.imageIDJupiter[2])
         self.planet.rotation(self.model.rot_jupiter, 0, self.model.speedJupiter, 0)
-        self.planet.addPlanet(1, self.model.rot_jupiter, 0, 0, -12, 6.0, 6.0, 20, 20)
+        self.planet.addPlanet(1, self.model.rot_jupiter, 0, 0, -15, 6.0, 6.0, 20, 20)
 
         # limit our FPS to 60 FPS
         time.sleep(1 / float(60))

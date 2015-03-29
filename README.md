@@ -1,12 +1,3 @@
-      _____       _                          _                 
-     / ____|     | |                        | |                
-    | (___   ___ | | __ _ _ __ ___ _   _ ___| |_ ___ _ __ ___  
-     \___ \ / _ \| |/ _` | '__/ __| | | / __| __/ _ \ '_ ` _ \ 
-     ____) | (_) | | (_| | |  \__ \ |_| \__ \ ||  __/ | | | | |
-    |_____/ \___/|_|\__,_|_|  |___/\__, |___/\__\___|_| |_| |_|
-                                   __/ |                      
-                                  |___/       
-                                  
 # Table of contents
 
 1. Angabe
@@ -59,11 +50,12 @@ Viel Erfolg! " [1]
 - Pyopengl
 - Pillow
 - Pyqt5
+- time
+- unittest
 
 ## TODO/ Known Bugs
 
-- Die Umlaufbahn der Planeten ist noch zu verbessern
-
+All done :)
 
 ## Quellen
 

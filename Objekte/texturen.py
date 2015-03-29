@@ -4,7 +4,6 @@ __author__ = 'floriandienesch'
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-import sys
 from PIL.Image import *
 
 class Texturen(object):
