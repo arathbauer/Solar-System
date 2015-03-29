@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Objekte.lighting &mdash; SolarSystem 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="SolarSystem 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">SolarSystem 1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for Objekte.lighting</h1><div class="highlight"><pre>
+<span class="c"># pylint: disable=wildcard-import, unused-wildcard-import, invalid-name, import-error, too-many-instance-attributes, too-few-public-methods, undefined-variable, missing-docstring</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;floriandienesch&#39;</span>
+
+<span class="kn">from</span> <span class="nn">OpenGL.GL</span> <span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="Lighting"><a class="viewcode-back" href="../../lighting.html#Objekte.lighting.Lighting">[docs]</a><span class="k">class</span> <span class="nc">Lighting</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class sets the light of the scene</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># list of our lights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lights</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Lighting.enableLighting"><a class="viewcode-back" href="../../lighting.html#Objekte.lighting.Lighting.enableLighting">[docs]</a>    <span class="k">def</span> <span class="nf">enableLighting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method enableLighting</span>
+<span class="sd">        This method enables the lighting</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_LIGHTING</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Lighting.disableLighting"><a class="viewcode-back" href="../../lighting.html#Objekte.lighting.Lighting.disableLighting">[docs]</a>    <span class="k">def</span> <span class="nf">disableLighting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method disableLighting</span>
+<span class="sd">        This method disable the lighting</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">glDisable</span><span class="p">(</span><span class="n">GL_LIGHTING</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Lighting.addLight"><a class="viewcode-back" href="../../lighting.html#Objekte.lighting.Lighting.addLight">[docs]</a>    <span class="k">def</span> <span class="nf">addLight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method addLight</span>
+<span class="sd">        This method adds a new light in the scene</span>
+<span class="sd">        Of course the light needs to be already set</span>
+<span class="sd">        :param id: id of the light, it should be e.g. GL_LIGHTn</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">newLight</span> <span class="o">=</span> <span class="n">Light</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lights</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">newLight</span>
+</div>
+    <span class="k">def</span> <span class="nf">getLight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lights</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Lighting.setLight"><a class="viewcode-back" href="../../lighting.html#Objekte.lighting.Lighting.setLight">[docs]</a>    <span class="k">def</span> <span class="nf">setLight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">diffuse</span><span class="p">,</span> <span class="n">specular</span><span class="p">,</span> <span class="n">ambient</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method setLight</span>
+<span class="sd">        This method sets the light</span>
+<span class="sd">        :param id: id of the light, it should be e.g. GL_LIGHTn</span>
+<span class="sd">        :param position: position of the light, it should be a list with 4 sections</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lights</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">diffuse</span><span class="p">,</span> <span class="n">specular</span><span class="p">,</span> <span class="n">ambient</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Lighting.render"><a class="viewcode-back" href="../../lighting.html#Objekte.lighting.Lighting.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method render</span>
+<span class="sd">        This method renders the light</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">light</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lights</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">light</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+</div></div>
+<div class="viewcode-block" id="Light"><a class="viewcode-back" href="../../lighting.html#Objekte.lighting.Light">[docs]</a><span class="k">class</span> <span class="nc">Light</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class represents an OpenGL light.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="n">glEnable</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diffuse</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">specular</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ambient</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Light.set"><a class="viewcode-back" href="../../lighting.html#Objekte.lighting.Light.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">diffuse</span><span class="p">,</span> <span class="n">specular</span><span class="p">,</span> <span class="n">ambient</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method set</span>
+<span class="sd">        This method sets the light</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diffuse</span> <span class="o">=</span> <span class="n">diffuse</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">specular</span> <span class="o">=</span> <span class="n">specular</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ambient</span> <span class="o">=</span> <span class="n">ambient</span>
+</div>
+<div class="viewcode-block" id="Light.render"><a class="viewcode-back" href="../../lighting.html#Objekte.lighting.Light.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method render</span>
+<span class="sd">        This method render the light</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">glLight</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">GL_POSITION</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">glLight</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">GL_DIFFUSE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffuse</span><span class="p">)</span>
+        <span class="n">glLight</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">GL_SPECULAR</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">specular</span><span class="p">)</span>
+        <span class="n">glLight</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">GL_AMBIENT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ambient</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Florian Dienesch, Alexander Rathbauer.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

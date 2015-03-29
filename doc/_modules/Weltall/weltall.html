@@ -1,0 +1,455 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Weltall.weltall &mdash; SolarSystem 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="SolarSystem 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">SolarSystem 1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for Weltall.weltall</h1><div class="highlight"><pre>
+<span class="c"># pylint: disable=import-error, wildcard-import, invalid-name, undefined-variable, no-member, attribute-defined-outside-init</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;floriandienesch&#39;</span>
+
+<span class="kn">from</span> <span class="nn">Objekte</span> <span class="kn">import</span> <span class="n">planet</span><span class="p">,</span> <span class="n">fixstern</span><span class="p">,</span> <span class="n">mond</span>
+<span class="kn">from</span> <span class="nn">Model.solarSysModel</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">Objekte.lighting</span> <span class="kn">import</span> <span class="n">Lighting</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtGui</span>
+<span class="kn">from</span> <span class="nn">Objekte.planet</span> <span class="kn">import</span> <span class="n">Planet</span>
+<span class="kn">from</span> <span class="nn">Objekte.mond</span> <span class="kn">import</span> <span class="n">Mond</span>
+<span class="kn">from</span> <span class="nn">Objekte.fixstern</span> <span class="kn">import</span> <span class="n">Fixstern</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<div class="viewcode-block" id="Weltall"><a class="viewcode-back" href="../../weltall.html#Weltall.weltall.Weltall">[docs]</a><span class="k">class</span> <span class="nc">Weltall</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is our universe.</span>
+<span class="sd">    We can display here our planets, stars or our moon</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        Initialize the variables</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">SolarSunModel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lighting</span> <span class="o">=</span> <span class="n">Lighting</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planet</span> <span class="o">=</span> <span class="n">Planet</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mond</span> <span class="o">=</span> <span class="n">Mond</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixstern</span> <span class="o">=</span> <span class="n">Fixstern</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Weltall.InitGL"><a class="viewcode-back" href="../../weltall.html#Weltall.weltall.Weltall.InitGL">[docs]</a>    <span class="k">def</span> <span class="nf">InitGL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method InitGL</span>
+<span class="sd">        This Method initializes our Solar System</span>
+<span class="sd">        It sets the lighting and enables or rather sets the textures</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># make the objects transparent</span>
+        <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_DEPTH_TEST</span><span class="p">)</span>
+        <span class="c"># enable texturing</span>
+        <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">)</span>
+
+        <span class="c"># enable lighting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lighting</span><span class="o">.</span><span class="n">enableLighting</span><span class="p">()</span>
+        <span class="c"># add a new light</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lighting</span><span class="o">.</span><span class="n">addLight</span><span class="p">(</span><span class="n">GL_LIGHT0</span><span class="p">)</span>
+
+        <span class="c"># set the position of the light to the sun</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lighting</span><span class="o">.</span><span class="n">setLight</span><span class="p">(</span><span class="n">GL_LIGHT0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOn</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOn</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOn</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOn</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="c"># set the textures when starting the program</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fileSet</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">imageIDMoon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">textureOrbit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">imageIDEarth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">textureOrbit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">imageIDSun</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">textureOrbit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">imageIDJupiter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">textureOrbit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&quot;Can&#39;t find the textures!&quot;</span><span class="p">)</span>
+        <span class="c"># load the textures which are assigned by the user</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imageIDMoon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">textureOrbit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imageIDEarth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">textureOrbit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imageIDSun</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">textureOrbit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imageIDJupiter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">textureOrbit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+
+        <span class="c"># open the help window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">help</span><span class="p">()</span>
+
+        <span class="c"># set color of the back of the planet not to black</span>
+        <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_COLOR_MATERIAL</span><span class="p">)</span>
+        <span class="c"># set the Backgroundcolor</span>
+        <span class="n">glClearColor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Weltall.reSizeGLScene"><a class="viewcode-back" href="../../weltall.html#Weltall.weltall.Weltall.reSizeGLScene">[docs]</a>    <span class="k">def</span> <span class="nf">reSizeGLScene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method reSizeGLScene</span>
+<span class="sd">        This function is called automatically by pyopengl when the window is resized</span>
+<span class="sd">        :param width: width of the window</span>
+<span class="sd">        :param height: height of the window</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># prevent A Divide By Zero If The Window Is Too Small</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">height</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">height</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="c"># reset The Current Viewport And Perspective Transformation</span>
+            <span class="n">glViewport</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+            <span class="c"># save the values of the current width and height</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Please enter an integer&quot;</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Weltall.drawGLScene"><a class="viewcode-back" href="../../weltall.html#Weltall.weltall.Weltall.drawGLScene">[docs]</a>    <span class="k">def</span> <span class="nf">drawGLScene</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method drawGLScene</span>
+<span class="sd">        This Function is called automatically by opengl</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">glMatrixMode</span><span class="p">(</span><span class="n">GL_PROJECTION</span><span class="p">)</span>
+        <span class="n">glLoadIdentity</span><span class="p">()</span>
+        <span class="n">gluPerspective</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">zoom</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">width</span><span class="p">)</span><span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">height</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">110.0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">perspective</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">gluLookAt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">glMatrixMode</span><span class="p">(</span><span class="n">GL_MODELVIEW</span><span class="p">)</span>
+        <span class="c"># clear The Screen And The Depth Buffer</span>
+        <span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">)</span>
+        <span class="c"># reset The Weltall</span>
+        <span class="n">glLoadIdentity</span><span class="p">()</span>
+
+        <span class="c"># renders the light</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lighting</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+        <span class="c"># bind the sun texture in our buffer</span>
+        <span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageIDSun</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lighting</span><span class="o">.</span><span class="n">disableLighting</span><span class="p">()</span>
+        <span class="c"># rotate the sun</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixstern</span><span class="o">.</span><span class="n">rotation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">rot_sonne</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedSun</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c"># add the sun to our solar system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixstern</span><span class="o">.</span><span class="n">addFixstern</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">rot_sonne</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">12</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lighting</span><span class="o">.</span><span class="n">enableLighting</span><span class="p">()</span>
+
+        <span class="c"># bind the earth texture in our buffer</span>
+        <span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageIDEarth</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="c"># rotate the earth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planet</span><span class="o">.</span><span class="n">rotation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">rot_erde</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedEarth</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c"># add the earth to our solar system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planet</span><span class="o">.</span><span class="n">addPlanet</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">rot_erde</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+        <span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageIDMoon</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mond</span><span class="o">.</span><span class="n">rotation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">rot_mond</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedMoon</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mond</span><span class="o">.</span><span class="n">addMond</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">rot_mond</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+        <span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageIDJupiter</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planet</span><span class="o">.</span><span class="n">rotation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">rot_jupiter</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedJupiter</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planet</span><span class="o">.</span><span class="n">addPlanet</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">rot_jupiter</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">12</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+        <span class="c"># limit our FPS to 60 FPS</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="mi">60</span><span class="p">))</span>
+
+        <span class="c"># since this is double buffered, swap the buffers to display what just got drawn.</span>
+        <span class="n">glutSwapBuffers</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Weltall.mousePressed"><a class="viewcode-back" href="../../weltall.html#Weltall.weltall.Weltall.mousePressed">[docs]</a>    <span class="k">def</span> <span class="nf">mousePressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method mousePressed</span>
+<span class="sd">        This function is called when the user clicks the left or</span>
+<span class="sd">        right mouse button</span>
+<span class="sd">        :param button: left or right button</span>
+<span class="sd">        :param state: fire the event on mouse-up or mouse-down</span>
+<span class="sd">        :param x: x-Coordinate of the mouse</span>
+<span class="sd">        :param y: y-Coordinate of the mouse</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># when the left mouse is pressed down</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="n">GLUT_DOWN</span> <span class="ow">and</span> <span class="n">button</span> <span class="o">==</span> <span class="n">GLUT_LEFT_BUTTON</span><span class="p">:</span>
+            <span class="c"># if the light is already on, turn it off</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightStatus</span> <span class="o">==</span> <span class="s">&quot;On&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lighting</span><span class="o">.</span><span class="n">enableLighting</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lighting</span><span class="o">.</span><span class="n">setLight</span><span class="p">(</span><span class="n">GL_LIGHT0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOff</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOff</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOff</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightStatus</span> <span class="o">=</span> <span class="s">&quot;Off&quot;</span>
+
+            <span class="c"># if the light is already off, turn it off2</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightStatus</span> <span class="o">==</span> <span class="s">&quot;Off&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lighting</span><span class="o">.</span><span class="n">setLight</span><span class="p">(</span><span class="n">GL_LIGHT0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOn</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOn</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOn</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightOn</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightStatus</span> <span class="o">=</span> <span class="s">&quot;Off2&quot;</span>
+
+            <span class="c"># if the light is already off, turn it on</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightStatus</span> <span class="o">==</span> <span class="s">&quot;Off2&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lighting</span><span class="o">.</span><span class="n">disableLighting</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lightStatus</span> <span class="o">=</span> <span class="s">&quot;On&quot;</span>
+
+        <span class="c"># if the right button is pressed down</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="n">GLUT_DOWN</span> <span class="ow">and</span> <span class="n">button</span> <span class="o">==</span> <span class="n">GLUT_RIGHT_BUTTON</span><span class="p">:</span>
+            <span class="c"># turn the textures on</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">textures</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+                <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">textures</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="c"># turn the textures off</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">glDisable</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">textures</span> <span class="o">=</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="Weltall.help"><a class="viewcode-back" href="../../weltall.html#Weltall.weltall.Weltall.help">[docs]</a>    <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method help</span>
+<span class="sd">        This displays an extern window with the description of the controls</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">330</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s">&#39;Solarsystem Help&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="s">&#39;This is the &lt;i&gt;Help&lt;/i&gt; of the &lt;i&gt;controls&lt;/i&gt; &#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMaximumSize</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">330</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">650</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edit</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTextEdit</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edit</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;&lt;h1&gt;Controls&lt;/h1&gt;&#39;</span>
+                         <span class="s">&#39;&lt;b&gt;&lt;i&gt;Mouse controls:&lt;/i&gt;&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Turn light on/ off: &lt;b&gt;Left mouse click&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Turn texture on/ off: &lt;b&gt;Right mouse click&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;&lt;b&gt;&lt;i&gt;Keyboard controls:&lt;/i&gt;&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Increase speed of Planets: &lt;b&gt;d&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Decrease speed of Planets: &lt;b&gt;a&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Stop animation: &lt;b&gt;s&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Load your own textures: &lt;b&gt;t&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Switch view: &lt;b&gt;m&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Zoom in: &lt;b&gt;x&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Zoom out: &lt;b&gt;y&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Switch to fullscreen mode: &lt;b&gt;f&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Display this help: &lt;b&gt;h&lt;/b&gt;&#39;</span>
+                         <span class="s">&#39;&lt;br&gt;Quit program: &lt;b&gt;ESC&lt;/b&gt;&#39;</span><span class="p">)</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowOpacity</span><span class="p">(</span><span class="mf">0.9</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Weltall.keyPressed"><a class="viewcode-back" href="../../weltall.html#Weltall.weltall.Weltall.keyPressed">[docs]</a>    <span class="k">def</span> <span class="nf">keyPressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method keyPressed</span>
+<span class="sd">        This function is called when a button on the keyboard is pressed</span>
+<span class="sd">        :param args: which button is pressed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># speed up the planets</span>
+        <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;d&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedEarth</span> <span class="o">+=</span> <span class="mf">0.2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedMoon</span> <span class="o">+=</span> <span class="mf">0.2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedSun</span> <span class="o">=</span> <span class="mf">0.1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedJupiter</span> <span class="o">+=</span> <span class="mf">0.2</span>
+        <span class="c"># speed down the planets</span>
+        <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;a&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedEarth</span> <span class="o">-=</span> <span class="mf">0.2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedMoon</span> <span class="o">-=</span> <span class="mf">0.2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedSun</span> <span class="o">=</span> <span class="mf">0.1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedJupiter</span> <span class="o">-=</span> <span class="mf">0.2</span>
+        <span class="c"># stop the planets</span>
+        <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;s&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedEarth</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedMoon</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedSun</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">speedJupiter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c"># start/ stop the fullsreen</span>
+        <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;f&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fullscreen</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+                <span class="n">glutFullScreen</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fullscreen</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fullscreen</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="n">glutPositionWindow</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">glutReshapeWindow</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
+        <span class="c"># If escape is pressed, kill everything.</span>
+        <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;</span><span class="se">\x1b</span><span class="s">&#39;</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+        <span class="c"># zoom out</span>
+        <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;x&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">zoom</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="mi">20</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">zoom</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="c"># zoom out</span>
+        <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;y&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">zoom</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="mi">100</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">zoom</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c"># assign new textures</span>
+        <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;t&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fileSet</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QFileDialog</span><span class="o">.</span>\
+                    <span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Load texture Moon&#39;</span><span class="p">,</span> <span class="s">&#39;/home&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QFileDialog</span>\
+                    <span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Load texture Earth&#39;</span><span class="p">,</span> <span class="s">&#39;/home&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QFileDialog</span><span class="o">.</span>\
+                    <span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Load texture Sun&#39;</span><span class="p">,</span> <span class="s">&#39;/home&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QFileDialog</span><span class="o">.</span>\
+                    <span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;Load texture Jupiter&#39;</span><span class="p">,</span> <span class="s">&#39;/home&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> \
+                        <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s">&quot;empty&quot;</span><span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&quot;empty&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">InitGL</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;h&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">help</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;m&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">perspective</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">perspective</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">perspective</span> <span class="o">=</span> <span class="mi">0</span>
+</div>
+<div class="viewcode-block" id="Weltall.main"><a class="viewcode-back" href="../../weltall.html#Weltall.weltall.Weltall.main">[docs]</a>    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method main</span>
+<span class="sd">        This function initializes and start pyopengl</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Select type of Display mode:</span>
+        <span class="c">#  Double buffer</span>
+        <span class="c">#  RGBA color</span>
+        <span class="c"># Alpha components supported</span>
+        <span class="c"># Depth buffer</span>
+        <span class="n">glutInitDisplayMode</span><span class="p">(</span><span class="n">GLUT_RGBA</span> <span class="o">|</span> <span class="n">GLUT_DOUBLE</span> <span class="o">|</span> <span class="n">GLUT_DEPTH</span><span class="p">)</span>
+
+        <span class="c"># get a 640 x 480 window</span>
+        <span class="n">glutInitWindowSize</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
+
+        <span class="c"># the window starts at the upper left corner of the screen</span>
+        <span class="n">glutInitWindowPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c"># Okay, like the C version we retain the window id to</span>
+        <span class="c"># use when closing, but for those of you new</span>
+        <span class="c"># to Python (like myself), remember this assignment</span>
+        <span class="c"># would make the variable local and not global</span>
+        <span class="c"># if it weren&#39;t for the global declaration at the</span>
+        <span class="c"># start of main.</span>
+        <span class="n">glutCreateWindow</span><span class="p">(</span><span class="s">&quot;Solarsystem v0.9&quot;</span><span class="p">)</span>
+
+        <span class="c"># Register the drawing function with glut, BUT in Python</span>
+        <span class="c"># land, at least using PyOpenGL, we need to</span>
+        <span class="c"># set the function pointer and invoke a function to</span>
+        <span class="c"># actually register the callback, otherwise it</span>
+        <span class="c"># would be very much like the C version of the code.</span>
+        <span class="n">glutDisplayFunc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">drawGLScene</span><span class="p">)</span>
+
+        <span class="c"># When we are doing nothing, redraw the scene.</span>
+        <span class="n">glutIdleFunc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">drawGLScene</span><span class="p">)</span>
+
+        <span class="c"># Register the function called when our window is resized.</span>
+        <span class="n">glutReshapeFunc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reSizeGLScene</span><span class="p">)</span>
+
+        <span class="c"># Register the function called when the keyboard is pressed.</span>
+        <span class="n">glutKeyboardFunc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keyPressed</span><span class="p">)</span>
+
+        <span class="c"># Register the function called when the mouse is clicked.</span>
+        <span class="n">glutMouseFunc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mousePressed</span><span class="p">)</span>
+
+        <span class="c"># Initialize our window.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">InitGL</span><span class="p">()</span>
+
+        <span class="c"># Start Event Processing Engine</span>
+        <span class="n">glutMainLoop</span><span class="p">()</span>
+
+</div></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="p">(</span><span class="n">glutInit</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">))</span>
+
+    <span class="c"># load splashscreen</span>
+    <span class="n">splash_pix</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QPixmap</span><span class="p">(</span><span class="s">&#39;../Splashscreen2.jpg&#39;</span><span class="p">)</span>
+    <span class="c"># generate the splashscreen with the image</span>
+    <span class="n">splash</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QSplashScreen</span><span class="p">(</span><span class="n">splash_pix</span><span class="p">,</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">WindowStaysOnTopHint</span><span class="p">)</span>
+    <span class="c"># show the splashscreen</span>
+    <span class="n">splash</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
+
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="n">Weltall</span><span class="p">()</span>
+    <span class="n">splash</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+    <span class="n">start</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Florian Dienesch, Alexander Rathbauer.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

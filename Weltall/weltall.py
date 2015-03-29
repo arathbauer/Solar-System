@@ -284,6 +284,8 @@ class Weltall(QtWidgets.QWidget):
                 if self.model.file[0] or self.model.file[1] \
                         or self.model.file[2] or self.model.file[3] == '':
                     print("empty")
+                print("empty")
+
             self.InitGL()
         if args[0] == b'h':
             self.help()
