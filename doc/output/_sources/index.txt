@@ -6,17 +6,29 @@
 Welcome to SolarSystem's documentation!
 =======================================
 
-Contents:
+Weltall:
 
 .. toctree::
    :maxdepth: 2
 
    weltall.rst
+
+Objekte:
+
+.. toctree::
+   :maxdepth: 2
+
    fixstern.rst
    lighting.rst
    mond.rst
    planet.rst
    texturen.rst
+
+Model:
+
+.. toctree::
+   :maxdepth: 2
+   
    model.rst
 
 
