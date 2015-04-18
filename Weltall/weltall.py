@@ -320,7 +320,7 @@ class Weltall(QtWidgets.QWidget):
         # would make the variable local and not global
         # if it weren't for the global declaration at the
         # start of main.
-        glutCreateWindow("Solarsystem v0.9")
+        glutCreateWindow("Solarsystem v1.1")
 
         # Register the drawing function with glut, BUT in Python
         # land, at least using PyOpenGL, we need to
